@@ -68,16 +68,18 @@
      </div>
      <nav>
   <div class="d-none nav nav-tabs cte-a cte-aedit" role="tablist">
+  <button class="nav-link m-0 p-2 cte-ea cte-easelection cte-egroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-object-group"></i></button>
+  <button class="nav-link m-0 p-2 cte-ea cte-eagroup cte-eselection" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-object-ungroup"></i></button>
      <button class="nav-link m-0 p-2 cte-ea cte-eaimage" data-bs-toggle="tab" data-bs-target=".cte-e6" type="button" role="tab"><i class="fa fa-paint-brush"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eaimage" data-bs-toggle="tab" data-bs-target=".cte-e7" type="button" role="tab"><i class="fa fa-cogs"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext" data-bs-toggle="tab" data-bs-target=".cte-e0" type="button" role="tab"><i class="fa fa-edit"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext" data-bs-toggle="tab" data-bs-target=".cte-e1" type="button" role="tab"><i class="fa fa-text-height"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext" data-bs-toggle="tab" data-bs-target=".cte-e2" type="button" role="tab"><i class="fa fa-circle-o-notch"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext cte-eashape" data-bs-toggle="tab" data-bs-target=".cte-e3" type="button" role="tab"><i class="fa fa-tint"></i></button>
-    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal" data-bs-toggle="tab" data-bs-target=".cte-e4" type="button" role="tab"><i class="fa fa-square-o"></i></button>
-    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal" data-bs-toggle="tab" data-bs-target=".cte-e5" type="button" role="tab"><i class="fa fa-arrows-alt"></i></button>
-    <button class="nav-link m-0 p-2 cte-ea cte-ecopy cte-eaglobal" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-copy"></i></button>
-    <button class="nav-link m-0 p-2 cte-ea cte-edelete cte-eaglobal" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-trash"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal cte-eagroup" data-bs-toggle="tab" data-bs-target=".cte-e4" type="button" role="tab"><i class="fa fa-square-o"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal cte-eagroup" data-bs-toggle="tab" data-bs-target=".cte-e5" type="button" role="tab"><i class="fa fa-arrows-alt"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-ecopy cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-copy"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-edelete cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-trash"></i></button>
   </div>
 </nav>
 <div class="tab-content ">
@@ -907,8 +909,11 @@
                                  $this.find(".cte-eashape").removeClass("d-none");
                                  break;
                        case 'activeSelection':
-                                 $this.find(".cte-aedit").addClass("d-none");
-                                 $this.find(".cte-amain").removeClass("d-none");
+                                 $this.find(".cte-easelection").removeClass("d-none");
+                                 return false;
+                                 break;
+                       case 'group':
+                                 $this.find(".cte-eagroup").removeClass("d-none");
                                  return false;
                                  break;
                    }
@@ -1826,6 +1831,18 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
       $this.find(`.cte-edelete`).on("click", function(){
       	 obj = canvas.getActiveObject();
           canvas.remove(obj);
+          render();
+          $this.find(".cte-aedit").addClass("d-none");
+          $this.find(".cte-amain").removeClass("d-none");
+        });
+      $this.find(`.cte-egroup`).on("click", function(){
+      	 canvas.getActiveObject().toGroup();
+          render();
+          $this.find(".cte-aedit").addClass("d-none");
+          $this.find(".cte-amain").removeClass("d-none");
+        });
+      $this.find(`.cte-eselection`).on("click", function(){
+      	 canvas.getActiveObject().toActiveSelection();
           render();
           $this.find(".cte-aedit").addClass("d-none");
           $this.find(".cte-amain").removeClass("d-none");
