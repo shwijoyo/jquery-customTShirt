@@ -76,7 +76,7 @@
     <button class="nav-link m-0 p-2 cte-ea cte-eatext" data-bs-toggle="tab" data-bs-target=".cte-e1" type="button" role="tab"><i class="fa fa-text-height"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext" data-bs-toggle="tab" data-bs-target=".cte-e2" type="button" role="tab"><i class="fa fa-circle-o-notch"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eatext cte-eashape" data-bs-toggle="tab" data-bs-target=".cte-e3" type="button" role="tab"><i class="fa fa-tint"></i></button>
-    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal cte-eagroup" data-bs-toggle="tab" data-bs-target=".cte-e4" type="button" role="tab"><i class="fa fa-square-o"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-eaglobal" data-bs-toggle="tab" data-bs-target=".cte-e4" type="button" role="tab"><i class="fa fa-square-o"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eaglobal cte-eagroup" data-bs-toggle="tab" data-bs-target=".cte-e5" type="button" role="tab"><i class="fa fa-arrows-alt"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-ecopy cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-copy"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-edelete cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-trash"></i></button>
