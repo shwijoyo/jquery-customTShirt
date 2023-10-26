@@ -388,7 +388,7 @@
 </div>
 <div class="row align-items-start pb-2">
     <div class="col">
-        <input type="range" class="form-range mt-1 cte-estrokewidth" min="0" max="10">
+        <input type="range" class="form-range mt-1 cte-estrokewidth" min="0" step="0.1" max="10">
     </div>
     <div class="col-3">
         <input class="form-control form-control-sm cte-estrokewidth" type="number">
@@ -743,12 +743,14 @@
                 break;
         	}
         
-        $this.find(`.cte-estroke`).val(obj.stroke);
+      $this.find(`.cte-estroke`).val(obj.stroke);
         $this.find(`.cte-estrokewidth`).val(obj.strokeWidth);
-        $this.find(`.cte-eshadowcolor`).val(obj.shadow.color);
+        
+        	$this.find(`.cte-eshadowcolor`).val(obj.shadow.color);
         $this.find(`.cte-eshadowblur`).val(obj.shadow.blur);
         $this.find(`.cte-eshadowoffsetx`).val(obj.shadow.offsetX);
         $this.find(`.cte-eshadowoffsety`).val(obj.shadow.offsetY);
+        
         (!obj.flipX)?$this.find(`.cte-eflipx`).find(`.fa`).addClass("fa-toggle-off").removeClass("fa-toggle-on"):$this.find(`.cte-eflipx`).find(`.fa`).addClass("fa-toggle-on").removeClass("fa-toggle-off");
         (!obj.flipY)?$this.find(`.cte-eflipy`).find(`.fa`).addClass("fa-toggle-off").removeClass("fa-toggle-on"):$this.find(`.cte-eflipy`).find(`.fa`).addClass("fa-toggle-on").removeClass("fa-toggle-off");
         $this.find(`.cte-eskewx`).val(obj.skewX);
@@ -895,6 +897,15 @@
             $this.find(".cte-e").removeClass("show").removeClass("active");
          	obj = canvas.getActiveObject();
              if(obj != undefined && obj != null){
+             if(obj.shadow == null){
+             	let shadow = {
+        	blur: 0,
+            color: "rgb(0,0,0)",
+            offsetX: 0,
+            offsetY: 0
+        }
+        obj.set({shadow: shadow});
+             	}
           	   $this.find(".cte-aedit").removeClass("d-none");
               	switch (obj.type){
               	     case 'text':
