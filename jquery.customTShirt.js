@@ -36,17 +36,17 @@
  <div class="card">
   <div class="card-header">
     <input class="d-none cte-importfile" type="file"/>
-    <div class="btn-group btn-group-sm" role="group" style="float: left">
+    <div class="btn-group btn-group-sm float-first" role="group">
        <button type="button" class="btn btn-outline-primary p-0"><input class="cte-color" type="text" style="width: 30px; height: 20px" data-coloris /></button>
        <button type="button" class="btn btn-outline-primary cte-importbutton"><i class="fa fa-folder-open"></i></button>
        <button type="button" class="btn btn-outline-primary dropdown-toggle cte-pointname" data-bs-toggle="dropdown" aria-expanded="false"></button>
        <ul class="dropdown-menu cte-pointlist"></ul>
      </div>
-     
-     <div class="btn-group btn-group-sm" role="group" style="float: right">
+     <div class="btn-group btn-group-sm float-end" role="group">
        <button type="button" class="btn btn-outline-primary cte-undo"><i class="fa fa-undo"></i></button>
        <button type="button" class="btn btn-outline-primary cte-redo"><i class="fa fa-repeat"></i></button>
-       <button type="button" class="btn btn-outline-primary cte-save"><i class="fa fa-floppy-o"></i></button>
+       <button type="button" class="btn btn-outline-primary cte-save"><span class="spinner-grow spinner-grow-sm m-0 p-0" aria-hidden="true"></span>
+
      </div>
      
   </div>
@@ -55,13 +55,13 @@
   </div>
   <div class="card-footer text-body-secondary">
   <input class="d-none cte-importdesignfile" type="file"/>
-    <div class="btn-group btn-group-sm cte-a cte-amain" role="group" style="float: left">
-       <!-- <button type="button" class="btn btn-outline-primary cte-adddesign"><i class="fa fa-list-alt"></i></button> -->
+    <div class="btn-group btn-group-sm cte-a cte-amain float-first" role="group">
+       <button type="button" class="btn btn-outline-primary cte-adddesign"><i class="fa fa-list-alt"></i></button>
        <button type="button" class="btn btn-outline-primary cte-addimage"><i class="fa fa-picture-o"></i></button>
        <button type="button" class="btn btn-outline-primary cte-addtext"><i class="fa fa-text-width"></i></button>
        <button type="button" class="btn btn-outline-primary cte-addshape"><i class="fa fa-star-o"></i></button>
      </div>
-     <div class="btn-group btn-group-sm cte-a cte-amain" role="group" style="float: right">
+     <div class="btn-group btn-group-sm cte-a cte-amain float-end" role="group">
        <button type="button" class="btn btn-outline-primary cte-view"><i class="fa fa-eye"></i></button>
        <button type="button" class="btn btn-outline-primary cte-importdesignbutton"><i class="fa fa-folder-open-o"></i></button>
        
@@ -78,6 +78,8 @@
     <button class="nav-link m-0 p-2 cte-ea cte-eatext cte-eashape" data-bs-toggle="tab" data-bs-target=".cte-e3" type="button" role="tab"><i class="fa fa-tint"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eaglobal" data-bs-toggle="tab" data-bs-target=".cte-e4" type="button" role="tab"><i class="fa fa-square-o"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-eaglobal cte-eagroup" data-bs-toggle="tab" data-bs-target=".cte-e5" type="button" role="tab"><i class="fa fa-arrows-alt"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-eup cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-arrow-up"></i></button>
+    <button class="nav-link m-0 p-2 cte-ea cte-edown cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-arrow-down"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-ecopy cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-copy"></i></button>
     <button class="nav-link m-0 p-2 cte-ea cte-edelete cte-eaglobal cte-eagroup" data-bs-toggle="tab" type="button" role="tab"><i class="fa fa-trash"></i></button>
   </div>
@@ -666,6 +668,7 @@
         return type;
     }
     let canvasLoad = () =>{
+    	
     	let arr = ["Roboto"];
         
         $.each(settings.data.canvas[settings.data.point].data.objects, (i, v)=>{
@@ -674,13 +677,31 @@
         	if(v.type == "text"){
         	    arr.push(v.fontFamily);
             }
+           if(v.type == "group"){
+        	    $.each(v.objects, (j, w)=>{
+             	if(w.type == "text"){
+        	          arr.push(w.fontFamily);
+                    }
+                  if(w.type == "group"){
+                  	$.each(w.objects, (k, x)=>{
+                       	if(x.type == "text"){
+        	                    arr.push(x.fontFamily);
+                             }
+                     	});
+                  	}
+           	});
+            }
         });
          WebFont.load({
         	        google: {families: arr},
                     active: () => {
-                  canvas.loadFromJSON(settings.data.canvas[settings.data.point].data);
+                    	setTimeout(()=>{
+                    	canvas.loadFromJSON(settings.data.canvas[settings.data.point].data);
+}, 2000);
+                  
                   },
                 });
+          $this.find(".cte-save").attr("disabled", true).html(`<span class="spinner-grow spinner-grow-sm m-0 p-0" aria-hidden="true"></span>`);
           $this.find(".cte-a").addClass("d-none");
           $this.find(".cte-e").removeClass("show").removeClass("active");
           $this.find(".cte-amain").removeClass("d-none");
@@ -699,6 +720,7 @@
          unredo.point >= unredo.data.length - 1 ? $this.find(".cte-redo").attr({ disabled: true }) : $this.find(".cte-redo").removeAttr("disabled");
     }
   let  renderGlobal = (obj)=>{
+  	
     	$this.find(`.cte-efilltype`).val(fillType(obj.fill));
         $this.find(`.cte-ecoloradd`).addClass("d-none");
         $this.find(`.cte-ec`).addClass("d-none");
@@ -754,6 +776,15 @@
         (!obj.flipX)?$this.find(`.cte-eflipx`).find(`.fa`).addClass("fa-toggle-off").removeClass("fa-toggle-on"):$this.find(`.cte-eflipx`).find(`.fa`).addClass("fa-toggle-on").removeClass("fa-toggle-off");
         (!obj.flipY)?$this.find(`.cte-eflipy`).find(`.fa`).addClass("fa-toggle-off").removeClass("fa-toggle-on"):$this.find(`.cte-eflipy`).find(`.fa`).addClass("fa-toggle-on").removeClass("fa-toggle-off");
         $this.find(`.cte-eskewx`).val(obj.skewX);
+        let objpost = canvas.getObjects().indexOf(obj);
+        $this.find(`.cte-edown`).removeClass("d-none");
+        $this.find(`.cte-eup`).removeClass("d-none");
+        if(objpost == 0){
+        	$this.find(`.cte-edown`).addClass("d-none");
+        }
+        if(objpost == canvas.getObjects().length-1){
+           $this.find(`.cte-eup`).addClass("d-none");
+        }
         
     }
     let renderImage = (obj)=>{
@@ -860,9 +891,27 @@
             
             link.click();
         	}
+        canvas.exportCanvas = function (){
+        	let link = document.createElement('a');
+        let file = new Blob([JSON.stringify(settings.data.canvas[settings.data.point].data)], {type: "text/plain"});
+          link.download = 'canvas.json';
+          
+    link.href = URL.createObjectURL(file);
+            
+            link.click();
+        	}
+        canvas.exportDesign = function (){
+        	let link = document.createElement('a');
+        let file = new Blob([JSON.stringify(settings.data.canvas[settings.data.point].data.objects)], {type: "text/plain"});
+          link.download = 'design.json';
+          
+    link.href = URL.createObjectURL(file);
+            
+            link.click();
+        	}
         canvas.on("after:render", function (){
     	    settings.data.canvas[settings.data.point].data = JSON.parse(`${JSON.stringify(canvas)}`);
-            
+            $this.find(".cte-save").removeAttr("disabled").html(`<i class="fa fa-floppy-o"></i></button>`);
         });
         canvas.on("object:modified", function (){
         let obj = canvas.getActiveObject();
@@ -906,6 +955,7 @@
         }
         obj.set({shadow: shadow});
              	}
+             
           	   $this.find(".cte-aedit").removeClass("d-none");
               	switch (obj.type){
               	     case 'text':
@@ -930,7 +980,7 @@
                    }
                    $this.find(".cte-eaglobal").removeClass("d-none");
                    
-                   canvas.bringToFront(obj);
+                   //canvas.bringToFront(obj);
                    render();
                    renderGlobal(obj);
                    
@@ -946,6 +996,9 @@
               closeLabel: 'OK',
               swatches: ["#264653", "#2a9d8f", "#e9c46a", "rgb(244,162,97)", "#e76f51", "#d62828", "navy", "#07b", "#0096c7", "#00b4d880", "rgba(0,119,182,0.8)"],
               onChange: (color, input) => {
+              $.each(settings.data.canvas, (i, v)=>{
+              	settings.data.canvas[i].data.background = color;
+              	});
                 canvas.setBackgroundColor(color);
                 canvas.renderAll();
                 },
@@ -993,6 +1046,7 @@
         });
         $this.find(".cte-addimage").attr({id: `${$this.attr("id")}-cte-addimage`}).imagepicker({
         	onPick: (imgurl)=>{
+        	$this.find(".cte-save").attr("disabled", true).html(`<span class="spinner-grow spinner-grow-sm m-0 p-0" aria-hidden="true"></span>`);
         	fabric.Image.fromURL(imgurl, function (obj) {
         	let shadow = {
         	blur: 0,
@@ -1023,6 +1077,7 @@
         });
         $this.find(".cte-addshape").svgpicker({
         	onPick: (svgurl) => {
+        	$this.find(".cte-save").attr("disabled", true).html(`<span class="spinner-grow spinner-grow-sm m-0 p-0" aria-hidden="true"></span>`);
               fabric.loadSVGFromURL(svgurl, function (oImg){
               	let shadow = {
         	blur: 0,
@@ -1861,7 +1916,7 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
         let tempcolor = "";
         
        $this.find(`.cte-view`).on("click", function(){
-       	console.log($(this).children().hasClass("fa-eye"));
+       	
        	if($(this).children().hasClass("fa-eye")){
        	    tempcolor = canvas.backgroundColor;
             	canvas.backgroundColor = "rgb(0, 0, 0, 0)";
@@ -1877,22 +1932,23 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
           canvas.renderAll();
         });
         
-       /*  $(".cte-adddesign").designpicker({
+       $(".cte-adddesign").designpicker({
         	onPick: (design)=>{
-        	
+        	console.log(design);
         	let objects = settings.data.canvas[settings.data.point].data.objects.concat(JSON.parse(`${JSON.stringify(design)}`));
         settings.data.canvas[settings.data.point].data.objects = JSON.parse(`${JSON.stringify(objects)}`)
             canvasLoad();
             render();
         	
         }
-        }); */
+        });
         $this.find(".cte-importdesignfile").on("change", function (){
          	let fr = new FileReader();
               fr.onload = function () {
               try {
                     let objects = settings.data.canvas[settings.data.point].data.objects.concat(JSON.parse(fr.result));
         settings.data.canvas[settings.data.point].data.objects = JSON.parse(`${JSON.stringify(objects)}`)
+        console.log(settings.data.canvas[settings.data.point].data.objects);
             canvasLoad();
             render();
                   
@@ -1907,11 +1963,27 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
          $this.find(".cte-importdesignbutton").on("click", ()=>{
          	$this.find(".cte-importdesignfile").click();
          });
+         $this.find(".cte-eup").on("click", ()=>{
+         	obj = canvas.getActiveObject();
+         canvas.bringForward(obj);
+         canvas.renderAll();
+         render();
+         
+         renderGlobal(obj);
+         });
+         $this.find(".cte-edown").on("click", ()=>{
+         	obj = canvas.getActiveObject();
+         canvas.sendBackwards(obj);
+         canvas.renderAll();
+         render();
+         
+        renderGlobal(obj);
+         });
     }
     
      (()=>{
         $this.html(element());
-    	canvas = new fabric.Canvas(`${$this.attr("id")}-canvas`);
+    	canvas = new fabric.Canvas(`${$this.attr("id")}-canvas`, {preserveObjectStacking: true});
         canvasLoad();
         if(settings.editor){
         	
