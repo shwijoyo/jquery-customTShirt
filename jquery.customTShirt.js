@@ -37,7 +37,7 @@
   <div class="card-header">
     <input class="d-none cte-importfile" type="file"/>
     <div class="btn-group btn-group-sm float-first" role="group">
-       <button type="button" class="btn btn-outline-primary p-0"><input class="cte-color" type="text" style="width: 30px; height: 20px;" data-coloris /></button>
+       <button type="button" class="btn btn-outline-primary p-0 m-0"><input class="cte-color" type="text" style="width: 30px; height: 20px; border: none" data-coloris /></button>
        <button type="button" class="btn btn-outline-primary cte-importbutton"><i class="fa fa-folder-open"></i></button>
        <button type="button" class="btn btn-outline-primary dropdown-toggle cte-pointname" data-bs-toggle="dropdown" aria-expanded="false"></button>
        <ul class="dropdown-menu cte-pointlist"></ul>
