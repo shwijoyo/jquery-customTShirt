@@ -37,7 +37,7 @@
   <div class="card-header">
     <input class="d-none cte-importfile" type="file"/>
     <div class="btn-group btn-group-sm float-first" role="group">
-       <button type="button" class="btn btn-outline-primary p-0"><input class="cte-color" type="text" style="width: 30px; height: 20px" data-coloris /></button>
+       <button type="button" class="btn btn-outline-primary p-0"><input class="cte-color" type="text" style="width: 30px; height: 20px;" data-coloris /></button>
        <button type="button" class="btn btn-outline-primary cte-importbutton"><i class="fa fa-folder-open"></i></button>
        <button type="button" class="btn btn-outline-primary dropdown-toggle cte-pointname" data-bs-toggle="dropdown" aria-expanded="false"></button>
        <ul class="dropdown-menu cte-pointlist"></ul>
@@ -344,13 +344,24 @@
 </div>
 <div class="row align-items-start pb-2">
     <div class="col-3">
-        <p class="text-start mt-1" style="font-size: 12px">width :</p>
+        <p class="text-start mt-1" style="font-size: 12px">Width :</p>
     </div>
     <div class="col">
         <input type="range" class="form-range mt-1 cte-ecpwidth">
     </div>
     <div class="col-3">
         <input class="form-control form-control-sm cte-ecpwidth" type="number">
+    </div>
+</div>
+<div class="row align-items-start pb-2">
+    <div class="col-3">
+        <p class="text-start mt-1" style="font-size: 12px">Height :</p>
+    </div>
+    <div class="col">
+        <input type="range" class="form-range mt-1 cte-ecpheight">
+    </div>
+    <div class="col-3">
+        <input class="form-control form-control-sm cte-ecpheight" type="number">
     </div>
 </div>
 <div class="row align-items-start pb-2">
@@ -373,6 +384,17 @@
     </div>
     <div class="col-3">
         <input class="form-control form-control-sm cte-ecpoffsety" type="number">
+    </div>
+</div>
+<div class="row align-items-start pb-2">
+    <div class="col-3">
+        <p class="text-start mt-1" style="font-size: 12px">Skew :</p>
+    </div>
+    <div class="col">
+        <input type="range" class="form-range mt-1 cte-ecpskew">
+    </div>
+    <div class="col-3">
+        <input class="form-control form-control-sm cte-ecpskew" type="number">
     </div>
 </div>
 </div>
@@ -711,6 +733,8 @@
     	if(isStore){
     	   unredo.store();
         }
+        
+        $this.find(".cte-color").css({backgroundColor: settings.data.canvas[settings.data.point].data.background, color: settings.data.canvas[settings.data.point].data.background});
     	$this.find(".cte-pointname").html(settings.data.canvas[settings.data.point].name);
          $this.find(".cte-pointlist").empty();
          $.each(settings.data.canvas, (i, v)=>{
@@ -760,6 +784,8 @@
                 $this.find(`.cte-ecp`).removeClass("d-none");
                $this.find(`.cte-ecprepeat`).val(obj.fill.repeat);
                $this.find(`.cte-ecpwidth`).val(obj.fill.patternTransform[0]);
+               $this.find(`.cte-ecpskew`).val(obj.fill.patternTransform[2]);
+               $this.find(`.cte-ecpheight`).val(obj.fill.patternTransform[3]);
                $this.find(`.cte-ecpoffsetx`).attr({min: -obj.width, max: obj.width}).val(obj.fill.patternTransform[4]);
                $this.find(`.cte-ecpoffsety`).attr({min: -obj.height, max: obj.height}).val(obj.fill.patternTransform[5]);
                 break;
@@ -955,7 +981,7 @@
         }
         obj.set({shadow: shadow});
              	}
-             
+             console.log(obj.fill);
           	   $this.find(".cte-aedit").removeClass("d-none");
               	switch (obj.type){
               	     case 'text':
@@ -1436,7 +1462,7 @@
     $this.find(".cte-ecpimage").attr({id: `${$this.attr("id")}-cte-ecpimage`}).imagepicker({
         	onPick: (imgurl)=>{
         fabric.util.loadImage(imgurl, function(img) {
-        	
+        
       obj.set('fill', new fabric.Pattern({
         source: img,
         repeat: "repeat",
@@ -1459,10 +1485,38 @@
          	    render();
                   renderGlobal(obj);
              });
-             
-        $this.find(`.cte-ecpwidth`).attr({min: 0, max: 1, value: 1, step: 0.01}).on("input", function(){
+     $this.find(`.cte-ecpskew`).attr({min: -2, max: 2, value: 1, step: 0.01}).on("input", function(){
+          obj = canvas.getActiveObject();
+          obj.fill.patternTransform[2] = Number(this.value);
+          
+                  let pattern = new fabric.Pattern(obj.fill);
+                  
+                 
+                  
+                 obj.set({fill: pattern});
+          canvas.renderAll();
+        }).on("change", ()=>{
+         	obj = canvas.getActiveObject();
+         	render();
+             renderGlobal(obj);
+         });
+
+        $this.find(`.cte-ecpwidth`).attr({min: 0, max: 2, value: 1, step: 0.01}).on("input", function(){
           obj = canvas.getActiveObject();
           obj.fill.patternTransform[0] = Number(this.value);
+          
+                  let pattern = new fabric.Pattern(obj.fill);
+                  
+                 obj.set({fill: pattern});
+          canvas.renderAll();
+        }).on("change", ()=>{
+         	obj = canvas.getActiveObject();
+         	render();
+             renderGlobal(obj);
+         });
+         $this.find(`.cte-ecpheight`).attr({min: 0, max: 2, value: 1, step: 0.01}).on("input", function(){
+          obj = canvas.getActiveObject();
+          
           obj.fill.patternTransform[3] = Number(this.value);
                   let pattern = new fabric.Pattern(obj.fill);
                  obj.set({fill: pattern});
