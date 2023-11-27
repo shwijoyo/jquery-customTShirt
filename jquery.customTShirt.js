@@ -13,6 +13,9 @@
         onSave: (data, canvas) => {
           console.log(data);
         },
+        onReady: (data, canvas)=>{
+        	console.log(data);
+        }
       },
       options
     );
@@ -2039,6 +2042,7 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
         $this.html(element());
     	canvas = new fabric.Canvas(`${$this.attr("id")}-canvas`, {preserveObjectStacking: true});
         canvasLoad();
+        settings.onReady(settings.data, canvas);
         if(settings.editor){
         	
         	event();
