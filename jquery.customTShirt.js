@@ -11,11 +11,14 @@
           ],
         },
         onSave: (data, canvas) => {
-          console.log(data);
+          
         },
         onReady: (data, canvas)=>{
-        	console.log(data);
-        }
+        	
+        },
+        onRender: (data, canvas)=>{
+        	
+        },
       },
       options
     );
@@ -941,6 +944,7 @@
         canvas.on("after:render", function (){
     	    settings.data.canvas[settings.data.point].data = JSON.parse(`${JSON.stringify(canvas)}`);
             $this.find(".cte-save").removeAttr("disabled").html(`<i class="fa fa-floppy-o"></i></button>`);
+            settings.onRender(settings.data, canvas);
         });
         canvas.on("object:modified", function (){
         let obj = canvas.getActiveObject();
