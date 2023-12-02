@@ -19,6 +19,7 @@
         onRender: (data, canvas)=>{
         	
         },
+        
       },
       options
     );
@@ -910,10 +911,7 @@
             link.href = canvas.toDataURL({format: 'png',});
             link.click();
         	}
-        canvas.on("after:render", function (){
-    	    settings.data.canvas[settings.data.point].data = JSON.parse(`${JSON.stringify(canvas)}`);
-            
-        });
+        
         canvas.export = function (){
         	let link = document.createElement('a');
         let file = new Blob([JSON.stringify(settings.data)], {type: "text/plain"});
@@ -941,6 +939,38 @@
             
             link.click();
         	}
+        canvas.captureAll = function (callback){
+            let i = 0;
+            
+            let image = [];
+            let design = [];
+            let data = JSON.parse(`${JSON.stringify(settings.data)}`);
+            let capture = ()=>{
+            	if(i==data.canvas.length){
+            	callback({image: image, design: design});
+                settings.data = data;
+                canvasLoad();
+            	return false;
+               }
+               settings.data.point = i;
+               canvasLoad();
+               setTimeout(function (){
+               	image.push(canvas.toDataURL({format: 'png',}));
+                   canvas.backgroundColor = "rgb(0, 0, 0, 0)";
+                   canvas.backgroundImage.opacity = 0;
+                   canvas.renderAll();
+                   setTimeout(function (){
+                   	if(data.canvas[i].data.objects.length != 0){
+                   	    design.push(canvas.toDataURL({format: 'png',}));
+                        }
+                        i+=1;
+                        capture();
+                   }, 1000);
+               }, 4000);
+            	
+            }
+            capture();
+        }
         canvas.on("after:render", function (){
     	    settings.data.canvas[settings.data.point].data = JSON.parse(`${JSON.stringify(canvas)}`);
             $this.find(".cte-save").removeAttr("disabled").html(`<i class="fa fa-floppy-o"></i></button>`);
@@ -2046,13 +2076,13 @@ $this.find(`.cte-efgrayscale`).on("click", ()=>{
         $this.html(element());
     	canvas = new fabric.Canvas(`${$this.attr("id")}-canvas`, {preserveObjectStacking: true});
         canvasLoad();
-        settings.onReady(settings.data, canvas);
+        
         if(settings.editor){
         	
         	event();
             render();
         }
-        
+        settings.onReady(settings.data, canvas);
      })();
     return this;
   };
