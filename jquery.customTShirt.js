@@ -108,6 +108,7 @@
         );
         let canvas = null;
         let $this = this;
+        let isRender = false;
         let unredo = {
             point: -1,
             data: [],
@@ -813,6 +814,7 @@
                     }, 2000);
                 },
             });
+            isRender = false;
             $this.find(".cte-save").attr("disabled", true).html(`<span class="spinner-grow spinner-grow-sm m-0 p-0" aria-hidden="true"></span>`);
             $this.find(".cte-a").addClass("d-none");
             $this.find(".cte-e").removeClass("show").removeClass("active");
@@ -1083,8 +1085,14 @@
                     }
                     settings.data.point = i;
                     canvasLoad();
-                    setTimeout(function () {
-                        let retr = {};
+                    let capturing = ()=>{
+                    	if(!isRender){
+                    	   setTimeout(()=>{
+                    	      capturing();
+                          }, 1000);
+                    	}
+                        else{
+                        	let retr = {};
                         retr["image"] = canvas.toDataURL({ format: "png" });
                         let object = [];
                         $.each(canvas._objects, (i, v) => {
@@ -1116,13 +1124,16 @@
                             ret.push(retr);
                             i += 1;
                             capture();
-                        }, 2000);
-                    }, 8000);
+                           }, 2000);
+                        }
+                    }
+                    capturing();
                 };
                 capture();
             };
 
             canvas.on("after:render", function () {
+            	isRender = true;
                 settings.data.canvas[settings.data.point].data = JSON.parse(`${JSON.stringify(canvas)}`);
                 $this.find(".cte-save").removeAttr("disabled").html(`<i class="fa fa-floppy-o"></i></button>`);
                 settings.onRender(settings.data, canvas);
