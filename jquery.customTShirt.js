@@ -992,7 +992,7 @@
             let obj = null;
             canvas.exportImage = function () {
                 let link = document.createElement("a");
-                link.download = "capture.png";
+                link.download = "image.png";
                 link.href = canvas.toDataURL({ format: "png" });
                 link.click();
             };
@@ -1117,7 +1117,7 @@
                             i += 1;
                             capture();
                         }, 2000);
-                    }, 4000);
+                    }, 8000);
                 };
                 capture();
             };
